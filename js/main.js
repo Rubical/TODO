@@ -3,6 +3,8 @@ const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 const emptyList = document.querySelector("#emptyList");
 
+let tasks = [];
+
 form.addEventListener("submit", addTask);
 
 tasksList.addEventListener("click", deleteTask);
@@ -15,9 +17,19 @@ function addTask(event) {
 
   const taskText = taskInput.value;
 
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    done: false,
+  };
+
+  tasks.push(newTask);
+
+  const cssClass = newTask.done ? "task-title task-title--done" : "task-title";
+
   const taskHTML = `
-                <li class="list-group-item d-flex justify-content-between task-item">
-                    <span class="task-title">${taskText}</span>
+                <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
+                    <span class="${cssClass}">${newTask.text}</span>
                     <div class="task-item__buttons">
                         <button type="button" data-action="done" class="btn-action">
                             <img src="./img/tick.svg" alt="Done" width="18" height="18">
@@ -42,6 +54,15 @@ function deleteTask(event) {
   if (event.target.dataset.action !== "delete") return;
 
   const parentNode = event.target.closest("li");
+
+  const id = Number(parentNode.id);
+
+  //   const index = tasks.findIndex(function (task) {
+  //     return task.id === id;
+  //   });
+
+  //   tasks.splice(index, 1);
+
   parentNode.remove();
 
   if (tasksList.children.length == 1) {
@@ -50,9 +71,17 @@ function deleteTask(event) {
 }
 
 function doneTask(event) {
+  i;
   if (event.target.dataset.action !== "done") return;
 
   const parentNode = event.target.closest("li");
+
+  const id = Number(parentNode.id);
+
+  const task = tasks.find((task) => task.id === id);
+
+  task.done = !task.done;
+
   const taskTitle = parentNode.querySelector("span");
   taskTitle.classList.toggle("task-title--done");
 }
