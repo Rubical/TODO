@@ -1,19 +1,21 @@
-const form = document.querySelector('#form');
-const taskInput = document.querySelector('#taskInput');
-const tasksList = document.querySelector('#tasksList');
-const emptyList = document.querySelector('#emptyList');
+const form = document.querySelector("#form");
+const taskInput = document.querySelector("#taskInput");
+const tasksList = document.querySelector("#tasksList");
+const emptyList = document.querySelector("#emptyList");
 
 // Добавление задачи
-form.addEventListener('submit', addTask);
+form.addEventListener("submit", addTask);
 
-function addTask (event) {
-    event.preventDefault();
-   
+// Удаление задачи
+tasksList.addEventListener("click", deleteTask);
 
-    const taskText = taskInput.value
-    
-    
-    const taskHTML = `
+// Функции
+function addTask(event) {
+  event.preventDefault();
+
+  const taskText = taskInput.value;
+
+  const taskHTML = `
                 <li class="list-group-item d-flex justify-content-between task-item">
                     <span class="task-title">${taskText}</span>
                     <div class="task-item__buttons">
@@ -26,14 +28,23 @@ function addTask (event) {
                     </div>
                 </li>`;
 
+  tasksList.insertAdjacentHTML("beforeend", taskHTML);
 
-    tasksList.insertAdjacentHTML('beforeend', taskHTML);
-    
-    taskInput.value = '';
-    taskInput.focus();
+  taskInput.value = "";
+  taskInput.focus();
 
+  if (tasksList.children.length > 1) {
+    emptyList.classList.add("none");
+  }
+}
 
-    if(tasksList.children.length > 1) {
-        emptyList.classList.add('none')
-    }
+function deleteTask(event) {
+  if (event.target.dataset.action === "delete") {
+    const parentNode = event.target.closest("li");
+    parentNode.remove();
+  }
+
+  if (tasksList.children.length == 1) {
+    emptyList.classList.remove("none");
+  }
 }
