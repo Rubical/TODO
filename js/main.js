@@ -9,6 +9,9 @@ form.addEventListener("submit", addTask);
 // Удаление задачи
 tasksList.addEventListener("click", deleteTask);
 
+// Отмечаем задачу завершенной
+tasksList.addEventListener("click", doneTask);
+
 // Функции
 function addTask(event) {
   event.preventDefault();
@@ -46,5 +49,13 @@ function deleteTask(event) {
 
   if (tasksList.children.length == 1) {
     emptyList.classList.remove("none");
+  }
+}
+
+function doneTask(event) {
+  if (event.target.dataset.action === "done") {
+    const parentNode = event.target.closest("li");
+    const taskTitle = parentNode.querySelector("span");
+    taskTitle.classList.toggle("task-title--done");
   }
 }
